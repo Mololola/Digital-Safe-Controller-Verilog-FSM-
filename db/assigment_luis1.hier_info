@@ -1,0 +1,23 @@
+|digit_selector
+clk => current_digit[0]~reg0.CLK
+clk => current_digit[1]~reg0.CLK
+clk => current_digit[2]~reg0.CLK
+clk => current_digit[3]~reg0.CLK
+sys_reset => current_digit~20.OUTPUTSELECT
+sys_reset => current_digit~21.OUTPUTSELECT
+sys_reset => current_digit~22.OUTPUTSELECT
+sys_reset => current_digit~23.OUTPUTSELECT
+enable_digit_select => current_digit~16.OUTPUTSELECT
+enable_digit_select => current_digit~17.OUTPUTSELECT
+enable_digit_select => current_digit~18.OUTPUTSELECT
+enable_digit_select => current_digit~19.OUTPUTSELECT
+up_pulse => always0~0.IN0
+up_pulse => always0~1.IN0
+down_pulse => always0~1.IN1
+down_pulse => always0~0.IN1
+current_digit[0] <= current_digit[0]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+current_digit[1] <= current_digit[1]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+current_digit[2] <= current_digit[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+current_digit[3] <= current_digit[3]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
