@@ -1,127 +1,210 @@
 # Digital-Safe-Controller-Verilog-FSM-
 
-A fully synchronous 4-digit FPGA safe implemented in Verilog using a top-down modular design.
-📘 Overview
+📌 Project Overview
 
-This repository contains the full implementation of a 4-digit safe controller developed for ELEC473 Assignment 1.
-The design is fully synchronous, modular, and implemented entirely in Verilog. All behaviour is formally specified using ASM charts, then simulated and verified using Quartus II waveform (.vwf) simulation.
+This project presents the complete design, implementation, simulation, and hardware validation of a four-digit electronic safe controller developed using Verilog HDL and the ASM (Algorithmic State Machine) design methodology.
 
-The safe accepts user input through push-buttons, stores and displays digits, compares user attempts against a stored code, and supports a programming mode for updating the code when unlocked.
+The system was implemented and tested on the Altera DE2 FPGA development board using Quartus II (v13.0-SP1). The safe allows a user to enter a four-digit PIN, verify access, and reprogram the stored PIN when unlocked.
 
-This project demonstrates:
+The design follows a fully synchronous architecture and demonstrates structured top-down digital system development.
 
-Top-down digital system design
+🎯 Objectives
 
-FSM-based control
+Apply the ASM design methodology to a real digital system
+
+Develop a modular, synthesizable Verilog design
+
+Implement and validate the design on FPGA hardware
+
+Demonstrate safe unlocking and controlled programming mode
+
+Ensure robustness against asynchronous button inputs
+
+🏗 System Architecture
+
+The system is divided into two main subsystems:
+
+1️⃣ Control Subsystem
+
+Reset & Restart Controller
+
+Main FSM Controller
+
+Programming Mode Controller
+
+LED Output Handler
+
+2️⃣ Datapath Subsystem
+
+Digit Selector
+
+Entry Handler
+
+Digit Counter
+
+Shift Display Controller
+
+Stored Code Register
+
+Comparator
+
+All modules are fully synchronous and operate using the DE2 50 MHz system clock.
+
+🔄 System Operation
+🔒 Locked State
+
+On power-up or reset, the safe is locked
+
+Red LED (LEDR6) is ON
+
+Default PIN = 4204
+
+🔢 Code Entry
+
+KEY1 → Increment digit
+
+KEY3 → Decrement digit
+
+KEY2 → Confirm digit
+
+Displays shift left as digits are entered
+
+✅ Correct Code
+
+If the entered code matches the stored code
+
+Green LED (LEDG6) turns ON
+
+Red LED turns OFF
+
+⚙ Programming Mode
+
+While unlocked, SW7 enables programming mode
+
+User enters a new 4-digit code
+
+Stored PIN updates only after full valid entry
+
+Reset restores default ID-based PIN
+
+🧠 Design Methodology
+
+The system was developed using a structured top-down design approach:
+
+Architectural decomposition
+
+Block diagram design
+
+ASM chart development for each module
+
+Module-level Verilog implementation
+
+Individual simulation validation
+
+Full-system simulation
+
+FPGA hardware validation
+
+All state transitions are synchronous and triggered on the rising edge of CLOCK_50.
+
+🧪 Verification
+
+The system was validated through:
+
+Module-level functional simulations
+
+Full-system simulation (unlock, programming, re-lock tests)
+
+Hardware testing on the DE2 board
+
+Test cases include:
+
+Correct code unlock
+
+Incorrect code rejection
+
+Programming mode update
+
+Post-programming verification
+
+Reset restoration
+
+Debounce robustness
+
+Simulation waveforms demonstrate correct FSM transitions, comparator assertions, and LED behaviour.
+
+🛠 Tools Used
+
+Quartus II v13.0-SP1
+
+Verilog HDL
+
+ModelSim (functional simulation)
+
+Altera DE2 Development Board
+
+📂 Repository Structure
+/src
+  safe_top_luis.v
+  reset_restart_controller.v
+  main_fsm_controller.v
+  digit_selector.v
+  entry_handler.v
+  digit_counter.v
+  shift_display_controller.v
+  stored_code_register.v
+  comparator.v
+  mode_programming_controller.v
+  led_output_handler.v
+
+/simulation
+  full_system_simulation.vwf
+
+/docs
+  Report.pdf
+🧩 Key Design Features
+
+Fully synchronous architecture
+
+Debounced push-button inputs
 
 One-cycle pulse generation
 
-Seven-segment display control
+Modular and scalable structure
 
-Modular FPGA development
+Deterministic FSM behaviour
 
-Hardware verification through simulation
+Hardware-validated implementation
 
-🧱 System Architecture
+📚 Learning Outcomes Demonstrated
 
-The system consists of ten fully modular hardware units:
+This project demonstrates:
 
-Control Modules
+Digital system design using ASM methodology
 
-Reset/Restart Controller – Generates synchronous reset and restart pulses
+Structured Verilog HDL development
 
-Entry Handler – Converts ENTER presses into one-cycle store/increment pulses
+FPGA synthesis and implementation
 
-Digit Counter – Counts confirmed digits (0–4)
+Integration of control and datapath architectures
 
-Programming Controller – Manages code programming mode
+Robust handling of asynchronous inputs
 
-Main FSM – Overall operation: LOCKED, COLLECTING, CHECK, UNLOCKED
+🚀 Potential Improvements
 
-Datapath Modules
+Future extensions could include:
 
-Digit Selector – Up/down digit selection
+Configurable PIN length
 
-Shift & Display Controller – Stores digits & updates HEX displays
+Lockout after repeated failed attempts
 
-Stored Code Register – Holds the programmed 4-digit code
+Timeout-based auto-relock
 
-Comparator – Compares entered versus stored code
+Parameterised design for scalability
 
-LED Handler – Controls locked/unlocked status LEDs
+Enhanced security mechanisms
 
-A full architectural diagram is included inside the PDF report.
+📄 License
 
-▶️ How to Run the Simulation
-1. Open the Quartus II Project
-
-Load the project or create a new one and add all Verilog files from /Verilog.
-
-2. Set the Desired Top-Level Module
-
-For example:
-
-Assignments → Settings → General → Top-level entity  
-
-
-Choose:
-
-digit_selector
-
-entry_handler
-
-digit_counter
-
-shift_display_controller
-
-or any other module you wish to simulate.
-
-3. Open the Corresponding .vwf File
-
-Located in /Simulation.
-
-Each file already contains:
-
-Clock definition (20 ns period)
-
-Input stimulus (up/down pulses, entry pulses, resets, etc.)
-
-Relevant observed output signals
-
-4. Run Functional Simulation
-Simulation → Run Functional Simulation
-
-
-Waveforms will update automatically.
-
-5. Inspect Outputs
-
-Confirm:
-
-Correct pulse generation
-
-Digit increments/decrements
-
-Correct HEX updates
-
-Proper resets & saturation
-
-Code comparison behaviour
-
-📄 Features Implemented
-
-✔ Fully synchronous Verilog design
-
-✔ Top-down architecture
-
-✔ FSM-driven control
-
-✔ One-cycle pulses for all event-based behaviour
-
-✔ Seven-segment display decoding
-
-✔ All modules independently tested
-
-✔ Simulation waveforms provided
-
-✔ Complete assignment-ready documentation
+This repository is submitted as part of ELEC473 coursework at the University of Liverpool.
+Educational use only.
