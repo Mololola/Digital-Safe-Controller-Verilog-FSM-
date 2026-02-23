@@ -12,28 +12,20 @@ module entry_handler (
     output reg  increment_counter_pulse // 1-clock pulse: increment digit counter
 );
 
-    always @(posedge clk) begin
-        if (sys_reset) begin
-            // On reset, outputs are forced low
-            store_digit_pulse       <= 1'b0;
-            increment_counter_pulse <= 1'b0;
-        end
-        else if (!enable_entry) begin
-            // Entry disabled: ignore any pulses, keep outputs low
-            store_digit_pulse       <= 1'b0;
-            increment_counter_pulse <= 1'b0;
-        end
-        else begin
-            // Entry enabled: pass through entry_pulse as one-cycle outputs
-            if (entry_pulse) begin
-                store_digit_pulse       <= 1'b1;
-                increment_counter_pulse <= 1'b1;
-            end
-            else begin
-                store_digit_pulse       <= 1'b0;
-                increment_counter_pulse <= 1'b0;
-            end
-        end
+    reg entry_prev;
+
+always @(posedge clk or posedge sys_reset) begin
+    if (sys_reset) begin
+        entry_prev <= 1'b0;
+        store_digit_pulse <= 1'b0;
+        increment_counter_pulse <= 1'b0;
+    end else begin
+        // rising edge detect on entry_pulse
+        store_digit_pulse <= (enable_entry && entry_pulse && !entry_prev);
+        increment_counter_pulse <= (enable_entry && entry_pulse && !entry_prev);
+        entry_prev <= entry_pulse;
     end
+end
+
 
 endmodule

@@ -11,7 +11,7 @@ module digit_selector (
 );
 
     // Sequential logic: update current_digit on each rising edge
-    always @(posedge clk) begin
+    always @(posedge clk or posedge sys_reset) begin
         if (sys_reset) begin
             // Reset digit to 0 on system reset
             current_digit <= 4'd0;

@@ -14,11 +14,15 @@ module digit_counter (
     assign full4 = (digit_count == 3'd4);
 
     // Sequential process: update the counter on each clock edge
-    always @(posedge clk) begin
-        if (sys_reset || restart_pulse) begin
+    always @(posedge clk or posedge sys_reset) begin
+        if (sys_reset) begin
             // On reset or restart, clear the count
             digit_count <= 3'd0;
         end
+		  else if (restart_pulse) begin
+			//key 0 restarts must clear the digit counter
+				digit_count <= 3'd0;
+		  end
         else if (increment_counter_pulse) begin
             // Only increment when requested
             if (digit_count < 3'd4)

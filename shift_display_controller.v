@@ -27,14 +27,20 @@ module shift_display_controller (
     // ===========================
     // 1) STORE / CLEAR DIGITS
     // ===========================
-    always @(posedge clk) begin
-        if (sys_reset || restart_pulse) begin
+    always @(posedge clk or posedge sys_reset) begin
+        if (sys_reset) begin
             // clear all digits on reset or restart
             d3 <= 4'd0;
             d2 <= 4'd0;
             d1 <= 4'd0;
             d0 <= 4'd0;
         end
+		  else if (restart_pulse) begin 
+		      d3 <= 4'd0;
+            d2 <= 4'd0;
+            d1 <= 4'd0;
+            d0 <= 4'd0;
+		  end
         else if (store_digit_pulse) begin
             // store current_digit into position selected by digit_count
             case (digit_count)
